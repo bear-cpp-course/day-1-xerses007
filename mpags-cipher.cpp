@@ -5,8 +5,15 @@
 #include <vector>
 #include <cctype>
 
-int main()
+int main(int argc, char* argv[])
 {	
+	// convert input to vector of strings
+	const std::vector<std::string> cmdLineArgs{argv,argv+argc};
+
+	for (size_t i{0}; i < cmdLineArgs.size() ; i++)
+	{
+		std::cout << cmdLineArgs.at(i) << std::endl;
+	}
 	//this is a comment
 	/* Take each letter from user input and in each case:
  * 	convert to Ucase
@@ -16,9 +23,10 @@ int main()
 
 	char in_char{'x'};
 	std::string outstring{""};
+
+	//Loop until user presses Enter then ctrl+D
 	while(std::cin >> in_char)
 	{
-		//Loop until user presses Enter then ctrl+D
 		const std::vector<std::string> toword {"ZERO","ONE","TWO","THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE"};
 		if(isdigit(in_char))
 		{
