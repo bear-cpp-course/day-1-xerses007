@@ -22,6 +22,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wfatal-errors -Wshadow -pedantic")
 add_executable(mpags-cipher.exe
  	mpags-cipher.cpp
  	MPAGSCipher/TransformChar.cpp
+	MPAGSCipher/RunCeasarCipher.cpp
 	)
 target_include_directories(mpags-cipher.exe
 	PRIVATE MPAGSCipher
