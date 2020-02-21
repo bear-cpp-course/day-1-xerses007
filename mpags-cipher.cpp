@@ -7,92 +7,26 @@
 #include <cctype>
 
 #include "TransformChar.hpp"
-#include "RunCeasarCipher.hpp"
-
-bool processCommandLine(
-	const std::vector<std::string>& args,
-	bool& helpRequested,
-	bool& versionRequested,
-	std::string& InputFileName,
-	std::string& OutputFileName,
-	std::string& Cipher,
-	bool& encrypt,
-	int& key)
-{
-	for (size_t i{0}; i < args.size() ; i++)
-	{
-		if ((args.at(i) == "-h")||(args.at(i) == "--help"))
-		{
-			std::cout << "Help Entry to come, please wait!" << std::endl;
-			helpRequested = true;
-			return false;	
-		}
-		if (args.at(i) == "--version")
-		{
-			std::cout << "Version 0.0.1"<< std::endl;
-			versionRequested = true;
-			return false;	
-		}
-		if ((args.at(i) == "-i")||(args.at(i) == "--input"))
-		{
-			if(i+1 >= args.size())
-			{
-				std::cout << "error: input file not supplied" << std::endl;
-				return false;
-			}
-			InputFileName = args.at(i+1);
-		}
-		if ((args.at(i) == "-o")||(args.at(i) == "--output"))
-		{
-			if(i+1 >= args.size())
-			{
-				std::cout << "error: output file not supplied" << std::endl;
-				return false;
-			}
-			OutputFileName = args.at(i+1);
-		}
-		if ((args.at(i) == "-c")||(args.at(i) == "--ceasar"))
-		{
-			if(i+1 >= args.size())
-			{
-				std::cout << "error: cipher not given" << std::endl;
-				return false;
-			}
-			Cipher = args.at(i+1);
-		}
-		if ((args.at(i) == "-k")||(args.at(i) == "--key"))
-		{
-			if(i+1 >= args.size())
-			{
-				std::cout << "error: key not given" << std::endl;
-				return false;
-			}
-			key = std::stoi(args.at(i+1));
-		}
-		if ((args.at(i) == "-d")||(args.at(i) == "decrypt"))
-		{
-			encrypt = false;
-		}
-		//std::cout << args.at(i) << std::endl;
-	}
-	return true;
-}
-
+#include "ProcessCommandLine.hpp"
+#include "CaesarCipher.hpp"
+#include "CipherMode.hpp"
 
 int main(int argc, char* argv[])
 {	
 	// convert input to vector of strings
 	const std::vector<std::string> cmdLineArgs{argv,argv+argc};
+	
+	// create arguments object with default args, will be populated by passing to processCommandLine
+	cmdLine Args {false,false,"","","Caesar","0",CipherMode::encrypt};
 
-	bool helpRequested{false};
-	bool versionRequested{false};
-	std::string InputFileName{""};
-	std::string OutputFileName{""};
-	std::string Cipher{"Ceasar"};
-	bool encrypt{true};//encrypt defaults to true, decrypt if false
-	int key{0};
-
-	processCommandLine(cmdLineArgs,helpRequested,versionRequested,InputFileName,OutputFileName,Cipher,encrypt,key);
+	if (processCommandLine(cmdLineArgs,Args)==false)
+	{
+		//error caught by processcommand line function
+		return 0;
+	}
+	
+	CaesarCipher myCipher{Args.key};
+	
 	/* Take each letter from user input and in each case:
  * 	convert to Ucase
  * 	change numbers to words
@@ -101,10 +35,11 @@ int main(int argc, char* argv[])
 
 	char in_char{'x'};
 	std::string outstring{""};
-
-	if( InputFileName == "")
+	
+	if( Args.inputFile == "")
 	{
 	//Loop until user presses Enter then ctrl+D
+		std::cout << "Ready, enter input text and press Enter then ctrl+d" << std::endl;
 		while(std::cin >> in_char)
 		{
 			transformChar(outstring,in_char);
@@ -112,7 +47,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		std::ifstream in_file{InputFileName};
+		std::ifstream in_file{Args.inputFile};
 		if (in_file.good() == false)
 		{
 			std::cout << "Error: Input file not found." <<std::endl;
@@ -125,19 +60,19 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	if(OutputFileName == "")
+	if(Args.outputFile == "")
 	{
-		std::cout << runCeasarCipher(outstring,key) << std::endl;
+		std::cout << myCipher.applyCipher(outstring,Args.cMode) <<std::endl;
 	}
 	else
 	{
-		std::ofstream out_file{OutputFileName};
+		std::ofstream out_file{Args.outputFile};
 		if (out_file.good()==false)
 		{
 			std::cout << "Error: could not open output file." << std::endl;
 			return 0;
 		}
-		out_file << runCeasarCipher(outstring,key)  << "\n";
+		out_file << myCipher.applyCipher(outstring,Args.cMode)  << "\n";
 	}
 }
 
