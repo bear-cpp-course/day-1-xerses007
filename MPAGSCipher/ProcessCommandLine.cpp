@@ -50,7 +50,17 @@ bool processCommandLine(const std::vector<std::string>& args, cmdLine& cmdArgs)
 				std::cout << "error: cipher not given" << std::endl;
 				return false;
 			}
-			cmdArgs.cipher = args.at(i+1);
+			if(args.at(i+1) == "caesar" || (args.at(i+1) == "c"))
+			{
+				cmdArgs.cipherType = CipherType::Caesar;
+			}else if( args.at(i+1) == "playfair" || (args.at(i+1) == "p"))
+			{
+				cmdArgs.cipherType = CipherType::Playfair;
+			}else
+			{
+				std::cerr << "[error] unknown cipher '" << args[i+1] << "'" <<std::endl;
+				return false;
+			}  
 			i++;
 		}
 		if ((args.at(i) == "-k")||(args.at(i) == "--key"))

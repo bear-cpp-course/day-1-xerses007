@@ -10,6 +10,7 @@
 #include "ProcessCommandLine.hpp"
 #include "CaesarCipher.hpp"
 #include "CipherMode.hpp"
+#include "CipherType.hpp"
 
 int main(int argc, char* argv[])
 {	
@@ -17,7 +18,7 @@ int main(int argc, char* argv[])
 	const std::vector<std::string> cmdLineArgs{argv,argv+argc};
 	
 	// create arguments object with default args, will be populated by passing to processCommandLine
-	cmdLine Args {false,false,"","","Caesar","0",CipherMode::encrypt};
+	cmdLine Args {false,false,"","","0",CipherMode::encrypt,CipherType::Caesar};
 
 	if (processCommandLine(cmdLineArgs,Args)==false)
 	{
