@@ -11,6 +11,7 @@
 #include "CaesarCipher.hpp"
 #include "CipherMode.hpp"
 #include "CipherType.hpp"
+#include "PlayfairCipher.hpp"
 
 int main(int argc, char* argv[])
 {	
@@ -18,7 +19,7 @@ int main(int argc, char* argv[])
 	const std::vector<std::string> cmdLineArgs{argv,argv+argc};
 	
 	// create arguments object with default args, will be populated by passing to processCommandLine
-	cmdLine Args {false,false,"","","0",CipherMode::encrypt,CipherType::Caesar};
+	cmdLine Args {false,false,"","","",CipherMode::encrypt,CipherType::Caesar};
 
 	if (processCommandLine(cmdLineArgs,Args)==false)
 	{
@@ -26,8 +27,18 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	CaesarCipher myCipher{Args.key};
+	switch(Args.cipherType)
+	{
+		case CipherType::Caesar:
+			std::cout<<"Caesar Cipher selected"<<std::endl;
+			break;
+		case CipherType::Playfair:
+			std::cout<<"Playfair Cipher selected"<<std::endl;
+			break;
+	}
 	
+	CaesarCipher myCipher{Args.key};
+	PlayfairCipher pCipher{Args.key};
 	/* Take each letter from user input and in each case:
  * 	convert to Ucase
  * 	change numbers to words
