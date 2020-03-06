@@ -17,15 +17,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # use our compiler flags
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wfatal-errors -Wshadow -pedantic")
 
+# - add the MPAGSCipher subdirectory to the build
+add_subdirectory(MPAGSCipher)
 
 # declare the build of mpags-cipher main program
 add_executable(mpags-cipher.exe
  	mpags-cipher.cpp
- 	MPAGSCipher/TransformChar.cpp
-	MPAGSCipher/CaesarCipher.cpp
-	MPAGSCipher/ProcessCommandLine.cpp
-	MPAGSCipher/CipherMode.hpp
 	)
-target_include_directories(mpags-cipher.exe
+target_link_libraries(mpags-cipher.exe
 	PRIVATE MPAGSCipher
 	)
