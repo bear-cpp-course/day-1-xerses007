@@ -4,6 +4,7 @@
 
 #include <string>
 #include "CipherMode.hpp"
+#include <map>
 
 /** \brief PlayfairCipher class that stores the key and has the applyCipher method which evaluates that key on a given string to either encrypt or decrypt
  *
@@ -16,5 +17,11 @@ class PlayfairCipher {
 		std::string applyCipher(const std::string& instring, const CipherMode cipherMode) const;///uses the cipher's key to encrypt/decrypt the given string
 	private:
 		std::string key_;
+		
+		using Char2PairMap = std::map<char,std::pair<int,int>>;
+		using Pair2CharMap = std::map<std::pair<int,int>,char>;
+
+		Char2PairMap _cpmap;
+		Pair2CharMap _pcmap; 
 };
 #endif //MPAGSCIPHER_CAESARCIPHER_HPP

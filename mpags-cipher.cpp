@@ -27,18 +27,6 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	switch(Args.cipherType)
-	{
-		case CipherType::Caesar:
-			std::cout<<"Caesar Cipher selected"<<std::endl;
-			break;
-		case CipherType::Playfair:
-			std::cout<<"Playfair Cipher selected"<<std::endl;
-			break;
-	}
-	
-	CaesarCipher myCipher{Args.key};
-	PlayfairCipher pCipher{Args.key};
 	/* Take each letter from user input and in each case:
  * 	convert to Ucase
  * 	change numbers to words
@@ -46,7 +34,7 @@ int main(int argc, char* argv[])
  * 	in each case, add result to string*/
 
 	char in_char{'x'};
-	std::string outstring{""};
+	std::string instring{""};
 	
 	if( Args.inputFile == "")
 	{
@@ -54,7 +42,7 @@ int main(int argc, char* argv[])
 		std::cout << "Ready, enter input text and press Enter then ctrl+d" << std::endl;
 		while(std::cin >> in_char)
 		{
-			transformChar(outstring,in_char);
+			transformChar(instring,in_char);
 		}
 	}
 	else
@@ -67,14 +55,32 @@ int main(int argc, char* argv[])
 		}
 		while(in_file >> in_char)
 		{
-			transformChar(outstring,in_char);
+			transformChar(instring,in_char);
 		
 		}
 	}
+	std::string outstring = "";	
+	switch(Args.cipherType)
+	{
+		case CipherType::Caesar:
+		{
+			try{std::stoi(Args.key);}catch(...){std::cerr<<"[error] Caesar cipher key must be an integer"<<std::endl; return 0;}
+			CaesarCipher cipher{Args.key};
+			outstring = cipher.applyCipher(instring,Args.cMode);
+			break;
+		}
+		case CipherType::Playfair:
+		{
+			PlayfairCipher cipher{Args.key};
+			outstring = cipher.applyCipher(instring,Args.cMode);
+			break;
+		}
+	}
+	
 	
 	if(Args.outputFile == "")
 	{
-		std::cout << myCipher.applyCipher(outstring,Args.cMode) <<std::endl;
+		std::cout << outstring <<std::endl;
 	}
 	else
 	{
@@ -84,7 +90,7 @@ int main(int argc, char* argv[])
 			std::cout << "Error: could not open output file." << std::endl;
 			return 0;
 		}
-		out_file << myCipher.applyCipher(outstring,Args.cMode)  << "\n";
+		out_file << outstring << "\n";
 	}
 }
 
