@@ -73,7 +73,7 @@ bool processCommandLine(const std::vector<std::string>& args, cmdLine& cmdArgs)
 			cmdArgs.key = args.at(i+1);
 			i++; // skip next arg as it is the value of k
 		}
-		if ((args.at(i) == "-d")||(args.at(i) == "decrypt"))
+		if ((args.at(i) == "-d")||(args.at(i) == "--decrypt"))
 		{
 			cmdArgs.cMode = CipherMode::decrypt;
 		}
